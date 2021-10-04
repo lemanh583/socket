@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="/socket.io/socket.io.js"></script>
+  </head>
+  <body>
+    <div id="content">
+      <h1>Form test socket</h1>
+    </div>
+
+    <form class="chatForm">
+      <input type="text" id="chatInput" />
+      <button type="submit">send</button>
+    </form>
+    <script>
+      let socket = io("http://localhost:3000");
+      const formInput = document.querySelector(".chatForm");
+      const chatInput = document.querySelector("#chatInput");
+      const content = document.querySelector("#content");
+      formInput.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const message = chatInput.value;
+        socket.emit("send-message", { message });
+      });
+
+      io().on("server-send", (data) => {
+          console.log(data)
+        const item = document.createElement("div");
+        item.innerHTML = data.message;
+        content.append(item);
+      });
+      // socket.on("connect", () => {
+      //   console.log(socket.id);
+      // });
+    </script>
+  </body>
+</html>
